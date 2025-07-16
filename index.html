@@ -33,10 +33,14 @@
                 })
                 .then(data => {
                     // ================================================================
-                    // KORREKTUR HIER:
-                    // Wir stringifizieren das GESAMTE 'data'-Objekt, nicht nur die Elemente.
-                    // Das 'data'-Objekt aus der JSON-Datei hat bereits die richtige Struktur.
-                    const encodedData = encodeURIComponent(JSON.stringify(data));
+                    // WORKAROUND: Wir erstellen ein neues Objekt im "clipboard"-Format.
+                    const clipboardData = {
+                        type: "excalidraw/clipboard",
+                        elements: data.elements // Wir nehmen nur die Elemente aus unserer Datei
+                    };
+
+                    // Wir stringifizieren und kodieren das neue clipboardData-Objekt.
+                    const encodedData = encodeURIComponent(JSON.stringify(clipboardData));
                     // ================================================================
 
                     // Den finalen Link zusammenbauen
