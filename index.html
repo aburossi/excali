@@ -20,39 +20,34 @@
     </div>
 
     <script>
-        // Dieses Skript wird ausgeführt, sobald die Seite geladen ist.
         document.addEventListener('DOMContentLoaded', () => {
             const actionButton = document.getElementById('actionButton');
-            const jsonFileName = 'template.json'; // Name unserer Vorlagendatei
+            const jsonFileName = 'template.json';
 
-            // 1. JSON-Datei vom Server (in diesem Fall GitHub Pages) abrufen
             fetch(jsonFileName)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`Netzwerk-Fehler: Konnte ${jsonFileName} nicht laden.`);
                     }
-                    return response.json(); // Wandelt die Antwort in ein JSON-Objekt um
+                    return response.json();
                 })
                 .then(data => {
-                    // 2. Excalidraw-Link erstellen
-                    const elements = data.elements;
-                    const sceneData = {
-                        elements: elements
-                    };
-
-                    // Die JSON-Daten in einen String umwandeln und für die URL kodieren
-                    const encodedData = encodeURIComponent(JSON.stringify(sceneData.elements));
+                    // ================================================================
+                    // KORREKTUR HIER:
+                    // Wir stringifizieren das GESAMTE 'data'-Objekt, nicht nur die Elemente.
+                    // Das 'data'-Objekt aus der JSON-Datei hat bereits die richtige Struktur.
+                    const encodedData = encodeURIComponent(JSON.stringify(data));
+                    // ================================================================
 
                     // Den finalen Link zusammenbauen
                     const excalidrawLink = `https://excalidraw.com/#json=${encodedData}`;
 
-                    // 3. Den Button aktualisieren, damit er als Link funktioniert
+                    // Den Button aktualisieren, damit er als Link funktioniert
                     actionButton.href = excalidrawLink;
                     actionButton.textContent = '✅ Board in neuem Tab öffnen';
-                    actionButton.removeAttribute('disabled'); // Macht den Link klickbar
+                    actionButton.removeAttribute('disabled');
                 })
                 .catch(error => {
-                    // Falls etwas schiefgeht, zeigen wir eine Fehlermeldung an
                     console.error('Fehler beim Laden oder Verarbeiten der JSON-Datei:', error);
                     actionButton.textContent = '❌ Fehler!';
                     actionButton.style.backgroundColor = '#e03131';
