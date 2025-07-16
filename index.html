@@ -32,27 +32,18 @@
                     return response.json();
                 })
                 .then(data => {
-                    // ================================================================
-                    // WORKAROUND: Wir erstellen ein neues Objekt im "clipboard"-Format.
-                    const clipboardData = {
-                        type: "excalidraw/clipboard",
-                        elements: data.elements // Wir nehmen nur die Elemente aus unserer Datei
-                    };
-
-                    // Wir stringifizieren und kodieren das neue clipboardData-Objekt.
-                    const encodedData = encodeURIComponent(JSON.stringify(clipboardData));
-                    // ================================================================
-
-                    // Den finalen Link zusammenbauen
+                    // This is the correct logic now that we have a valid JSON file.
+                    // We stringify the ENTIRE object from the file.
+                    const encodedData = encodeURIComponent(JSON.stringify(data));
                     const excalidrawLink = `https://excalidraw.com/#json=${encodedData}`;
 
-                    // Den Button aktualisieren, damit er als Link funktioniert
+                    // Update the button to be a working link
                     actionButton.href = excalidrawLink;
                     actionButton.textContent = '✅ Board in neuem Tab öffnen';
                     actionButton.removeAttribute('disabled');
                 })
                 .catch(error => {
-                    console.error('Fehler beim Laden oder Verarbeiten der JSON-Datei:', error);
+                    console.error('Error:', error);
                     actionButton.textContent = '❌ Fehler!';
                     actionButton.style.backgroundColor = '#e03131';
                 });
